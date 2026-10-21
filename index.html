@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Chetan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        camu: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.7); }
+    </style>
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-200 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Banner -->
+    <div class="bg-amber-500 dark:bg-amber-600 text-slate-950 dark:text-slate-900 font-semibold text-xs py-1 px-4 text-center tracking-wide uppercase flex items-center justify-center gap-2 shadow-sm relative z-40">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>STUDENT DASHBOARD • DEMO DATA</span>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="min-h-[calc(100vh-28px)] flex flex-col">
+
+        <!-- ==================== 1. LOGIN SCREEN ==================== -->
+        <div id="login-screen" class="flex-1 flex items-center justify-center p-4 relative overflow-hidden bg-slate-100 dark:bg-slate-950">
+            <!-- Background Decorative Elements -->
+            <div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 relative z-10 transition-all">
+                
+                <!-- Logo & Header -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 mb-3">
+                        <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Student Dashboard</h1>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Your academic life, organized in one place</p>
+                </div>
+
+                <!-- Form Controls (Mock) -->
+                <form id="login-form" onsubmit="handleFormLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1">Student Code</label>
+                        <div class="relative">
+                            <i class="fa-regular fa-envelope absolute left-3.5 top-3.5 text-slate-400"></i>
+                            <input type="text" id="login-email" value="23102A010227" required class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1">Password</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400"></i>
+                            <input type="password" value="student123" required class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs pt-1">
+                        <label class="flex items-center text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mr-2"> Remember me
+                        </label>
+                        <a href="#" onclick="showToast('Use the student code shown on this demo login page.', 'info')" class="text-indigo-600 dark:text-indigo-400 hover:underline">Demo login only</a>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-medium rounded-xl shadow-md shadow-indigo-600/20 transition-all">
+                        Login to Dashboard
+                    </button>
+                </form>
+
+                <div class="mt-5 rounded-xl border border-indigo-200 dark:border-indigo-900 bg-indigo-50/70 dark:bg-indigo-950/40 p-4">
+                    <div class="flex items-center gap-2 text-sm font-bold text-indigo-900 dark:text-indigo-200 mb-3">
+                        <i class="fa-solid fa-key"></i> Demo Login Details
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="text-slate-600 dark:text-slate-300">Student Code</span>
+                            <span class="font-semibold text-slate-900 dark:text-white">23102A010227</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="text-slate-600 dark:text-slate-300">Demo Password</span>
+                            <span class="font-semibold text-slate-900 dark:text-white">student123</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-3">Demo only — this page does not use secure real authentication.</p>
+                </div>
+
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200 dark:border-slate-800"></div></div>
+                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white dark:bg-slate-900 px-3 text-slate-400">Student Demo Access</span></div>
+                </div>
+
+                <!-- Quick Preset Login Buttons -->
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="loginAs('student')" class="p-3 border border-indigo-200 dark:border-indigo-900/50 bg-indigo-50/50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-xl text-left transition flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-indigo-900 dark:text-indigo-200">Student Demo</div>
+                            <div class="text-[10px] text-slate-500 dark:text-slate-400">Chetan (CSE AIML)</div>
+                        </div>
+                    </button>
+
+
+                </div>
+
+                <!-- Dark Mode Quick Toggle in Login -->
+                <div class="mt-6 text-center">
+                    <button onclick="toggleDarkMode()" class="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 inline-flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:inline"></i>
+                        Toggle Theme Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 2. MAIN PORTAL LAYOUT ==================== -->
+        <div id="portal-screen" class="hidden flex-1 flex flex-col md:flex-row bg-slate-100 dark:bg-slate-950">
+            
+            <!-- SIDEBAR NAV -->
+            <aside class="w-full md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 z-20">
+                <!-- Portal Brand -->
+                <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-600/30">
+                            C
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-900 dark:text-white leading-tight">Student Dashboard</div>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400" id="portal-role-badge">Student Mode</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Mini Profile -->
+                <div class="p-4 bg-slate-50 dark:bg-slate-800/50 m-3 rounded-xl border border-slate-200/60 dark:border-slate-700/50 flex items-center gap-3">
+                    <div id="user-avatar" class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-bold border-2 border-indigo-500" aria-label="Student initials">C</div>
+                    <div class="overflow-hidden">
+                        <div id="user-name" class="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">Chetan</div>
+                        <div id="user-sub" class="text-xs text-slate-500 dark:text-slate-400 truncate">ID: 23102A010227</div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="flex-1 p-3 space-y-1 overflow-y-auto custom-scrollbar" id="sidebar-nav">
+                    <!-- Nav items injected by JS based on role -->
+                </nav>
+
+                <!-- Sidebar Footer Controls -->
+                <div class="p-3 border-t border-slate-200 dark:border-slate-800 space-y-1">
+                    <button onclick="toggleDarkMode()" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
+                        <i class="fa-solid fa-moon w-5 text-center dark:hidden text-slate-400"></i>
+                        <i class="fa-solid fa-sun w-5 text-center hidden dark:inline text-amber-400"></i>
+                        <span id="theme-text">Dark Mode</span>
+                    </button>
+                    <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition">
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-1 flex flex-col min-w-0 overflow-y-auto custom-scrollbar">
+                
+                <!-- TOP HEADER BAR -->
+                <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+                    <div>
+                        <h2 id="view-title" class="text-xl font-bold text-slate-900 dark:text-white">Dashboard Overview</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Academic Year 2026–2027 • Final Year</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button onclick="toggleNotifications()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 relative transition">
+                                <i class="fa-regular fa-bell"></i>
+                                <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-indigo-600 rounded-full ring-2 ring-white dark:ring-slate-900"></span>
+                            </button>
+                            
+                            <!-- Notifications Popover -->
+                            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 p-4">
+                                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 mb-3">
+                                    <span class="font-bold text-sm">Notifications</span>
+                                    <span class="text-[10px] bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 px-2 py-0.5 rounded-full font-semibold">3 New</span>
+                                </div>
+                                <div class="space-y-3 text-xs">
+                                    <div class="p-2 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/20 border-l-2 border-indigo-500">
+                                        <p class="font-medium text-slate-800 dark:text-slate-200">Mid-Term Deep Learning Schedule Released</p>
+                                        <p class="text-[10px] text-slate-400 mt-1">2 hours ago</p>
+                                    </div>
+                                    <div class="p-2 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border-l-2 border-amber-500">
+                                        <p class="font-medium text-slate-800 dark:text-slate-200">Attendance updated for NLP Lab</p>
+                                        <p class="text-[10px] text-slate-400 mt-1">Yesterday</p>
+                                    </div>
+                                    <div class="p-2 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border-l-2 border-emerald-500">
+                                        <p class="font-medium text-slate-800 dark:text-slate-200">Assignment 3 Graded: 94%</p>
+                                        <p class="text-[10px] text-slate-400 mt-1">2 days ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- DYNAMIC VIEW CONTAINER -->
+                <div id="content-area" class="p-4 md:p-6 space-y-6">
+                    <!-- Views will be dynamically populated by JS -->
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Management
+        let currentUserRole = 'student';
+        let currentView = 'dashboard';
+        let isDarkMode = false;
+
+        // Mock Data
+        const studentData = {
+            name: "Chetan",
+            id: "23102A010227",
+            program: "B.Tech CSE (AI & ML)",
+            semester: "Final Year",
+            overallAttendance: 88,
+            cgpa: 8.42,
+            courses: [
+                { code: "CS601", name: "Deep Learning Architectures", attendance: 92, teacher: "Dr. A. Sharma", credits: 4, grade: "A" },
+                { code: "CS602", name: "Natural Language Processing", attendance: 84, teacher: "Prof. R. Vance", credits: 4, grade: "A-" },
+                { code: "CS603", name: "Computer Networks & Security", attendance: 90, teacher: "Dr. M. Patel", credits: 3, grade: "A" },
+                { code: "CS604", name: "Database Management Systems", attendance: 86, teacher: "Prof. S. Gupta", credits: 4, grade: "B+" },
+                { code: "CS605", name: "Cloud Computing Labs", attendance: 80, teacher: "Dr. K. Lee", credits: 2, grade: "O" }
+            ],
+            schedule: [
+                { day: "Monday", time: "09:00 - 10:30 AM", course: "Deep Learning", room: "LH-301" },
+                { day: "Monday", time: "11:00 - 12:30 PM", course: "NLP Lecture", room: "LH-204" },
+                { day: "Tuesday", time: "10:00 - 01:00 PM", course: "Cloud Computing Lab", room: "Lab-B" },
+                { day: "Wednesday", time: "09:00 - 10:30 AM", course: "Computer Networks", room: "LH-301" },
+                { day: "Thursday", time: "02:00 - 03:30 PM", course: "Database Management", room: "LH-102" },
+                { day: "Friday", time: "11:00 - 01:00 PM", course: "Deep Learning Seminar", room: "Auditorium 2" }
+            ],
+            announcements: [
+                { title: "Mid-Semester Examination Dates Announced", date: "Oct 20, 2026", cat: "Exam", desc: "Mid-terms will commence from Nov 10th. Detailed schedule posted." },
+                { title: "Hackathon Registration Open", date: "Oct 18, 2026", cat: "Event", desc: "Annual Smart Campus Hackathon registrations close this Friday." },
+                { title: "Library Extension Hours for Finals", date: "Oct 15, 2026", cat: "General", desc: "Main library will remain open 24/7 starting next Monday." }
+            ]
+        };
+
+        // Initialize Theme Mode
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Notification Popover Toggle
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifications-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Toast Messages
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'info' ? 'bg-indigo-600' : 'bg-amber-600';
+            
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-xs font-medium pointer-events-auto transition-all transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Auth Logic
+        function handleFormLogin(e) {
+            e.preventDefault();
+            loginAs('student');
+        }
+
+        function loginAs(role = 'student') {
+            currentUserRole = 'student';
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('portal-screen').classList.remove('hidden');
+            currentView = 'dashboard';
+            updateUserProfileUI();
+            renderSidebarNav();
+            renderView();
+            showToast(`Welcome, ${studentData.name}`);
+        }
+
+        function logout() {
+            document.getElementById('portal-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            showToast('Signed out successfully', 'info');
+        }
+
+        function updateUserProfileUI() {
+            document.getElementById('user-name').innerText = studentData.name;
+            document.getElementById('user-sub').innerText = `ID: ${studentData.id}`;
+            document.getElementById('user-avatar').src = studentData.avatar;
+            document.getElementById('portal-role-badge').innerText = 'Student Dashboard';
+        }
+
+        function renderSidebarNav() {
+            const nav = document.getElementById('sidebar-nav');
+            const items = [
+                ['dashboard', 'fa-chart-pie', 'Dashboard'],
+                ['attendance', 'fa-clipboard-user', 'Attendance'],
+                ['schedule', 'fa-calendar-days', 'Timetable'],
+                ['grades', 'fa-graduation-cap', 'Grades'],
+                ['profile', 'fa-user', 'Student Details'],
+                ['assignments', 'fa-file-lines', 'Assignments'],
+                ['fees', 'fa-wallet', 'Fee Details'],
+                ['resources', 'fa-book', 'Study Resources']
+            ];
+            nav.innerHTML = items.map(([view, icon, label]) => `
+                <button onclick="navigate('${view}')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition ${currentView === view ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}">
+                    <i class="fa-solid ${icon} w-5 text-center"></i> ${label}
+                </button>`).join('');
+        }
+
+        function navigate(view) {
+            currentView = view;
+            renderSidebarNav();
+            renderView();
+        }
+
+        // Render Dynamic Main Content View
+        function renderView() {
+            const container = document.getElementById('content-area');
+            const titleEl = document.getElementById('view-title');
+            const views = {
+                dashboard: ['Student Dashboard', renderStudentDashboard],
+                attendance: ['Attendance Analytics', renderAttendanceTracker],
+                schedule: ['Weekly Timetable', renderTimetable],
+                grades: ['Grades & Academic Record', renderGradebook],
+                profile: ['Student Details', renderStudentDetails],
+                assignments: ['Assignments', renderAssignments],
+                fees: ['Fee Details', renderFees],
+                resources: ['Study Resources', renderResources]
+            };
+            const [title, renderer] = views[currentView] || views.dashboard;
+            titleEl.innerText = title;
+            container.innerHTML = renderer();
+        }
+
+        // ================= VIEWS TEMPLATES ================= //
+
+        function renderStudentDashboard() {
+            return `
+                <!-- STATS ROW -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-slate-900 dark:text-white">${studentData.overallAttendance}%</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Overall Attendance</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-slate-900 dark:text-white">${studentData.cgpa}</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Demo CGPA</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-slate-900 dark:text-white">5 Courses</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Enrolled This Term</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-slate-900 dark:text-white">Nov 10</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Next Exam Date</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAIN TWO-COLUMN LAYOUT -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Left: Quick Attendance Summary -->
+                    <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 dark:text-white">Subject-wise Attendance</h3>
+                            <button onclick="navigate('attendance')" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">View Full Details →</button>
+                        </div>
+                        <div class="space-y-4">
+                            ${studentData.courses.map(c => `
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-1">
+                                        <span class="text-slate-800 dark:text-slate-200">${c.name} (${c.code})</span>
+                                        <span class="${c.attendance >= 85 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}">${c.attendance}%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                        <div class="h-full ${c.attendance >= 85 ? 'bg-emerald-500' : 'bg-amber-500'} rounded-full transition-all duration-500" style="width: ${c.attendance}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Right: Recent Announcements -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm flex flex-col">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-4">Campus Notices</h3>
+                        <div class="space-y-4 flex-1">
+                            ${studentData.announcements.map(a => `
+                                <div class="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/30">
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="px-2 py-0.5 rounded-md font-semibold ${a.cat === 'Exam' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'}">${a.cat}</span>
+                                        <span class="text-slate-400">${a.date}</span>
+                                    </div>
+                                    <div class="font-semibold text-xs text-slate-800 dark:text-slate-200 mb-1">${a.title}</div>
+                                    <div class="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">${a.desc}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        function renderAttendanceTracker() {
+            return `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Detailed Attendance Breakup</h3>
+                            <p class="text-xs text-slate-500">Minimum required attendance threshold: 75%</p>
+                        </div>
+                        <div class="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800/50 text-xs font-semibold">
+                            <i class="fa-solid fa-shield-check"></i> Eligible for Mid-Term Exams
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                <tr>
+                                    <th class="p-3.5 rounded-l-xl">Course Code & Name</th>
+                                    <th class="p-3.5">Instructor</th>
+                                    <th class="p-3.5">Classes Attended</th>
+                                    <th class="p-3.5">Percentage</th>
+                                    <th class="p-3.5 rounded-r-xl">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                ${studentData.courses.map(c => `
+                                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
+                                        <td class="p-3.5 font-semibold text-slate-800 dark:text-slate-200">${c.name} <span class="text-slate-400 font-normal">(${c.code})</span></td>
+                                        <td class="p-3.5 text-slate-600 dark:text-slate-400">${c.teacher}</td>
+                                        <td class="p-3.5 text-slate-600 dark:text-slate-400">${Math.round(c.attendance * 0.4)} / 40 Sessions</td>
+                                        <td class="p-3.5 font-bold ${c.attendance >= 85 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600'}">${c.attendance}%</td>
+                                        <td class="p-3.5">
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${c.attendance >= 75 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}">
+                                                ${c.attendance >= 75 ? 'Safe Status' : 'At Risk'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTimetable() {
+            return `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Weekly Schedule Grid</h3>
+                        <p class="text-xs text-slate-500">Spring Semester 2026 Timetable</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${studentData.schedule.map(item => `
+                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 relative overflow-hidden group hover:border-indigo-500 transition">
+                                <div class="w-1 h-full bg-indigo-500 absolute left-0 top-0"></div>
+                                <div class="flex items-center justify-between text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-2">
+                                    <span>${item.day}</span>
+                                    <span class="text-slate-400 font-normal">${item.time}</span>
+                                </div>
+                                <div class="font-bold text-sm text-slate-900 dark:text-white mb-1">${item.course}</div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-location-dot"></i> ${item.room}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGradebook() {
+            return `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Semester Academic Grades</h3>
+                            <p class="text-xs text-slate-500">Demo CGPA: ${studentData.cgpa} / 10.0</p>
+                        </div>
+                        <button onclick="showToast('Grade Report PDF Download Initiated', 'info')" class="px-3 py-2 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 rounded-xl text-xs font-semibold border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition">
+                            <i class="fa-solid fa-download"></i> Download Report
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                <tr>
+                                    <th class="p-3.5 rounded-l-xl">Subject Code</th>
+                                    <th class="p-3.5">Course Name</th>
+                                    <th class="p-3.5">Credits</th>
+                                    <th class="p-3.5 rounded-r-xl">Grade Awarded</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                ${studentData.courses.map(c => `
+                                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
+                                        <td class="p-3.5 font-bold text-slate-700 dark:text-slate-300">${c.code}</td>
+                                        <td class="p-3.5 text-slate-800 dark:text-slate-200">${c.name}</td>
+                                        <td class="p-3.5 text-slate-500">${c.credits}</td>
+                                        <td class="p-3.5"><span class="px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300 font-bold text-xs">${c.grade}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudentDetails() {
+            return `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-20 h-20 rounded-2xl bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 flex items-center justify-center text-3xl font-bold border-2 border-indigo-500" aria-label="Student initials">C</div>
+                        <div><h3 class="text-xl font-bold">${studentData.name}</h3><p class="text-sm text-slate-500">B.Tech CSE (AI & ML) • Final Year</p><p class="text-xs text-indigo-600 mt-1">Demo student profile</p></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        ${[['Student Name', studentData.name], ['Student Code', studentData.id], ['Program', studentData.program], ['Year', 'Final Year'], ['Department', 'Computer Science & Engineering'], ['Specialization', 'Artificial Intelligence & Machine Learning'], ['Academic Year', '2026–2027'], ['Email', 'chetan.student@example.com'], ['Phone', '+91 90000 12345 (demo)'], ['Mentor', 'Faculty Mentor (demo)'], ['Blood Group', 'Not provided'], ['Address', 'Student address (demo)']].map(([label, value]) => `<div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60"><div class="text-xs text-slate-500 mb-1">${label}</div><div class="font-semibold text-sm">${value}</div></div>`).join('')}
+                    </div>
+                    <p class="mt-5 text-xs text-amber-600">All additional personal details are fictional placeholders for demonstration. Replace them with accurate information before use.</p>
+                </div>`;
+        }
+
+        function renderAssignments() {
+            const assignments = [
+                { title: 'Deep Learning Mini Project', course: 'Deep Learning', due: 'Oct 28, 2026', status: 'In progress' },
+                { title: 'SQL Query Practice', course: 'Database Management Systems', due: 'Oct 25, 2026', status: 'Pending' },
+                { title: 'Cloud Deployment Report', course: 'Cloud Computing', due: 'Nov 02, 2026', status: 'Not started' },
+                { title: 'NLP Text Classification', course: 'Natural Language Processing', due: 'Nov 05, 2026', status: 'In progress' }
+            ];
+            return `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${assignments.map(a => `<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm"><div class="flex justify-between gap-3"><h3 class="font-bold">${a.title}</h3><span class="text-[10px] h-fit px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">${a.status}</span></div><p class="text-xs text-slate-500 mt-2">${a.course}</p><div class="flex items-center justify-between mt-5 text-xs"><span class="text-slate-500"><i class="fa-regular fa-calendar mr-1"></i> Due: ${a.due}</span><button onclick="showToast('Demo assignment details opened', 'info')" class="text-indigo-600 font-semibold">View details →</button></div></div>`).join('')}</div>`;
+        }
+
+        function renderFees() {
+            const rows = [['Tuition Fee', '₹85,000', 'Paid'], ['Examination Fee', '₹2,500', 'Paid'], ['Library & Lab Fee', '₹4,000', 'Pending'], ['Transport / Hostel', '₹0', 'Not applicable']];
+            return `<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6"><div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800"><p class="text-xs text-slate-500">Total fee (demo)</p><p class="text-2xl font-bold mt-2">₹91,500</p></div><div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800"><p class="text-xs text-slate-500">Paid</p><p class="text-2xl font-bold text-emerald-600 mt-2">₹87,500</p></div><div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800"><p class="text-xs text-slate-500">Outstanding</p><p class="text-2xl font-bold text-amber-600 mt-2">₹4,000</p></div></div><div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6"><h3 class="font-bold mb-4">Fee breakdown</h3><div class="space-y-3">${rows.map(([name, amount, status]) => `<div class="flex items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-3"><div><div class="font-semibold text-sm">${name}</div><div class="text-xs text-slate-500">${status}</div></div><div class="font-bold text-sm">${amount}</div></div>`).join('')}</div><p class="text-xs text-amber-600 mt-4">Illustrative fee figures only; not an official statement.</p></div>`;
+        }
+
+        function renderResources() {
+            const resources = [['Deep Learning Notes', 'PDF / Lecture notes', 'fa-brain'], ['DBMS Revision Guide', 'Study guide', 'fa-database'], ['Computer Networks', 'Reference material', 'fa-network-wired'], ['Cloud Computing Lab Manual', 'Lab resource', 'fa-cloud'], ['Placement Preparation', 'Practice set', 'fa-code'], ['Project Documentation Template', 'Project resource', 'fa-file-lines']];
+            return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">${resources.map(([title, type, icon]) => `<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5"><div class="w-11 h-11 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 flex items-center justify-center text-lg mb-4"><i class="fa-solid ${icon}"></i></div><h3 class="font-bold">${title}</h3><p class="text-xs text-slate-500 mt-1">${type}</p><button onclick="showToast('This is a demo resource. Add a real file link to enable access.', 'info')" class="mt-4 text-xs font-semibold text-indigo-600">Open resource →</button></div>`).join('')}</div>`;
+        }
+
+        // Window Load Handler
+        window.onload = function() {
+            // Default view ready
+        };
+    </script>
+</body>
+</html>
